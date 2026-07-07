@@ -24,7 +24,7 @@ Aceito
 
 ## Decisão
 
-Adotar um Project no Claude — workspace com conhecimento persistente e os conectores de Google Drive e Notion já autenticados na conta — separando explicitamente três camadas: (1) dados estruturados de origem, em planilha no Drive, lida ao vivo; (2) conhecimento de apoio estático (legislação e templates de card), mantido como Project Knowledge; (3) motor de execução mensal, acionado por Luciano colando o boleto de condomínio, que classifica rubricas contra uma tabela de regras versionada, calcula em código — não por geração de texto — o valor devido por locador e por locatário, preenche os templates de card e grava o resultado na memória de cálculo no Notion.
+Adotar um Project no Claude — workspace com conhecimento persistente e o conector de Google Drive já autenticado na conta — separando explicitamente três camadas: (1) dados estruturados de origem, em planilha no Drive, lida ao vivo; (2) conhecimento de apoio estático (legislação e templates de card), mantido como Project Knowledge; (3) motor de execução mensal, acionado por Luciano colando o boleto de condomínio, que classifica rubricas contra uma tabela de regras versionada, calcula em código — não por geração de texto — o valor devido por locador e por locatário, preenche os templates de card e grava o resultado na memória de cálculo no Google Sheets.
 
 O princípio não negociável da decisão: **nenhum valor monetário em um card sai de texto gerado livremente pela IA.** Todo número é resultado de uma função determinística e auditável. A IA decide classificação de rubrica ambígua e redige o card — nunca soma dinheiro "no olho".
 
@@ -33,7 +33,7 @@ O princípio não negociável da decisão: **nenhum valor monetário em um card 
 ```
 Fichas (Drive) + Base de conhecimento (legislação/templates)
    → Motor (Claude: classifica rubricas + calcula em código)
-   → Cards de cobrança + Memória de cálculo (Notion)
+   → Cards de cobrança + Memória de cálculo (Google Sheets)
 ```
 
 ### Detalhes da Implementação
@@ -46,7 +46,7 @@ Fichas (Drive) + Base de conhecimento (legislação/templates)
 3. Classificar cada rubrica como ordinária, extraordinária ou chamada extra, contra a tabela de regras (base: Lei 8.245/91 arts. 22-23 + exceções contratuais registradas na ficha)
 4. Calcular, em código, o valor de responsabilidade do locador e do locatário por contrato
 5. Preencher os templates de card (um para locador, um para locatário, por contrato)
-6. Gravar o registro do mês na memória de cálculo no Notion, com rubricas, valores, classificação aplicada e a base usada para cada decisão
+6. Gravar o registro do mês na memória de cálculo no Google Sheets (aba "Historico"), com rubricas, valores, classificação aplicada e a base usada para cada decisão
 7. Sinalizar explicitamente qualquer rubrica sem classificação clara — nunca decidir e enviar em silêncio
 
 ## Alternativas Consideradas
@@ -59,9 +59,9 @@ Fichas (Drive) + Base de conhecimento (legislação/templates)
 - **Prós**: excelente para consulta e Q&A sobre fontes longas (legislação, contratos); grounding forte em texto estático
 - **Contras**: não é um agente executor — não gera output estruturado nem escreve de volta em lugar nenhum; sem memória de execução mês a mês
 
-### Alternativa C: Claude Project + conectores Google Drive/Notion (Escolhida)
-- **Prós**: conectores já autenticados na conta; execução de código nativa para cálculo determinístico e auditável; Project Knowledge para legislação e templates; escreve a memória direto no Notion sem infraestrutura adicional; zero app, zero painel — como pedido
-- **Contras**: depende da disponibilidade dos conectores; leitura de Google Sheets (em oposição a Docs) pelo conector do Drive precisa ser validada empiricamente antes de confiar no fluxo
+### Alternativa C: Claude Project + conector Google Drive (Escolhida)
+- **Prós**: conector já autenticado na conta; execução de código nativa para cálculo determinístico e auditável; Project Knowledge para legislação e templates; escreve a memória direto no Google Sheets sem infraestrutura adicional; zero app, zero painel — como pedido; ecossistema Google unificado
+- **Contras**: depende da disponibilidade do conector; leitura e escrita de Google Sheets pelo conector do Drive precisa ser validada empiricamente antes de confiar no fluxo
 
 ## Consequências
 
@@ -81,6 +81,8 @@ Fichas (Drive) + Base de conhecimento (legislação/templates)
   - **Mitigação**: validar isso na Fase A do blueprint, antes de qualquer outra etapa; se não ler nativamente, publicar a planilha como CSV e ler por URL
 - **Risco**: rubrica ambígua classificada errado, gerando cobrança indevida
   - **Mitigação**: toda classificação incerta é sinalizada no card e na memória para revisão humana; motor nunca marca um card como "pronto pra enviar" com pendência aberta naquele contrato
+- **Risco**: erro na escrita da memória de cálculo no Google Sheets
+  - **Mitigação**: validar escrita antes de cada fechamento mensal; manter backup da planilha
 
 ## Referências
 - Lei nº 8.245/1991 (Lei do Inquilinato), arts. 22 e 23 — despesas de responsabilidade do locador e do locatário
