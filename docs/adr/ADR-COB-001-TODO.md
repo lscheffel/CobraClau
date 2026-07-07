@@ -36,7 +36,7 @@
 
 | # | Tarefa | Status | Prioridade | Dependências | Estimativa |
 |---|--------|--------|------------|--------------|------------|
-| A2.1 | Levantar as rubricas mais comuns dos últimos boletos de condomínio reais | ⬜ | 🔴 | — | 1h |
+| A2.1 | Levantar as rubricas mais comuns dos últimos boletos de condomínio reais | ✅ | 🔴 | — | 1h |
 | A2.2 | Criar a aba/tabela Regras-Rubrica com classe e base legal por linha | ⬜ | 🔴 | A2.1 | 1h |
 | A2.3 | Validar a tabela contra a Lei 8.245/91, arts. 22-23 (revisão cruzada) | ⬜ | 🔴 | A2.2 | 1h |
 
