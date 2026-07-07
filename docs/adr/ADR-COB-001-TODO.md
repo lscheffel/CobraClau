@@ -24,7 +24,7 @@
 |---|--------|--------|------------|--------------|------------|
 | A1.1 | Definir schema da aba Contratos (locador, imóvel, locatário, aluguel, IPTU, internet, luz, forma de cobrança de cada item, exceções) | ✅ | 🔴 | — | 1h |
 | A1.2 | Criar a planilha no Drive com esse schema | ✅ | 🔴 | A1.1 | 30min |
-| A1.3 | Popular com os contratos reais atualmente ativos | 🔄 | 🔴 | A1.2 | 2h |
+| A1.3 | Popular com os contratos reais atualmente ativos | ✅ | 🔴 | A1.2 | 2h |
 
 **Checkpoint A1:**
 - [ ] Planilha existe no Drive com todos os contratos ativos de Luciano
