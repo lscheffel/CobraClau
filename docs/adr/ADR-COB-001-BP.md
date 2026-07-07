@@ -14,7 +14,7 @@ Entregar, todo mês, os cards de cobrança de locador e locatário para todos os
 | Métrica | Antes | Depois | Status |
 |---------|-------|--------|--------|
 | Tempo de fechamento mensal completo | Manual, refeito do zero todo mês | < 15 min de revisão humana por ciclo | ⬜ |
-| Rastreabilidade do cálculo | Nenhuma | 100% dos meses com registro na memória (Notion) | ⬜ |
+| Rastreabilidade do cálculo | Nenhuma | 100% dos meses com registro na memória (Google Sheets) | ⬜ |
 | Cards enviados com classificação de rubrica não revisada | Não medido, risco implícito | Zero — pendência sempre sinalizada antes do envio | ⬜ |
 
 ---
@@ -28,6 +28,9 @@ Google Drive/
                              luz, forma de cobrança de cada item, exceções de contrato
     aba: Regras-Rubrica   → rubrica → classe (ordinária/extraordinária/chamada extra)
                              → responsável padrão → base legal
+    aba: Historico        → mês, contrato, imóvel, rubricas classificadas,
+                             valor locador, valor locatário, status (revisado/enviado),
+                             pendências (se houver)
 
 Claude Project: "Cobrança de Locação"
   Project Knowledge/
@@ -37,12 +40,6 @@ Claude Project: "Cobrança de Locação"
     template-card-locatario.md
     instrucoes-motor.md            (regras de classificação, formato de saída,
                                      critério de quando marcar pendência)
-
-Notion/
-  Database: "Memória de Cobrança"
-    propriedades: mês, contrato, imóvel, rubricas classificadas,
-                   valor locador, valor locatário, status (revisado/enviado),
-                   pendências (se houver)
 ```
 
 ---
@@ -115,10 +112,10 @@ rubrica: "pintura de fachada"    | classe: extraordinária | responsável: locad
 3. Motor classifica cada rubrica pela tabela de regras; marca pendências quando não há regra clara
 4. Motor calcula, em código, o valor de locador e de locatário por contrato
 5. Motor preenche os templates de card (Project Knowledge)
-6. Motor grava o registro do mês na memória (Notion)
+6. Motor grava o registro do mês na memória (aba Historico do Google Sheets)
 7. Motor entrega os cards prontos no chat, junto com a lista de pendências, se houver
 
-**Checkpoint:** todos os contratos do mês têm card gerado ou pendência explicitamente sinalizada; memória do mês atualizada no Notion.
+**Checkpoint:** todos os contratos do mês têm card gerado ou pendência explicitamente sinalizada; memória do mês atualizada no Google Sheets.
 
 ---
 
@@ -192,13 +189,12 @@ locatario_total = sum(r.valor for r in rubricas if regras[r.nome] == "locatario"
 - [ ] Tabela de regras de rubrica populada com os itens mais comuns dos boletos recebidos
 - [ ] Templates de card (locador e locatário) aprovados por Luciano
 - [ ] Legislação relevante carregada no Project Knowledge
-- [ ] Conector Google Drive testado com leitura real da planilha
-- [ ] Conector Notion testado com escrita real de um registro de teste
+- [ ] Conector Google Drive testado com leitura e escrita real da planilha
 
 ### Checklist de Pós-Deploy
 
 - [ ] Primeiro mês fechado com 100% dos contratos revisados manualmente antes do envio
-- [ ] Memória do Notion conferida linha a linha no primeiro mês
+- [ ] Memória do Google Sheets conferida linha a linha no primeiro mês
 - [ ] Pendências de classificação do primeiro mês resolvidas e realimentadas na tabela de regras
 
 ---
@@ -247,7 +243,7 @@ locatario_total = sum(r.valor for r in rubricas if regras[r.nome] == "locatario"
 | Conector Drive não lê Google Sheets nativamente | Médio | Média | Validar na Fase A, antes de qualquer outra etapa; fallback: publicar planilha como CSV por URL |
 | Rubrica classificada errado | Alto | Baixa, se pendência for sempre sinalizada | Nunca decidir silenciosamente — pendência explícita sempre |
 | Planilha de fichas desatualizada | Alto | Média | Checklist de revisão da ficha antes de cada fechamento mensal |
-| Notion indisponível ou erro de escrita | Baixo | Baixa | Fallback: gravar também em aba de histórico na própria planilha |
+| Erro na escrita da memória no Google Sheets | Médio | Baixa | Validar escrita antes de cada fechamento mensal; manter backup da planilha |
 
 ---
 
