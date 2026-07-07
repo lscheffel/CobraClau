@@ -50,7 +50,7 @@
 
 | # | Tarefa | Status | Prioridade | Dependências | Estimativa |
 |---|--------|--------|------------|--------------|------------|
-| A3.1 | Testar leitura da planilha via conector Google Drive no Claude | ⬜ | 🔴 | A1.2 | 30min |
+| A3.1 | Testar leitura da planilha via conector Google Drive no Claude | ✅ | 🔴 | A1.2 | 30min |
 | A3.2 | Confirmar se o conector lê Google Sheets nativamente; se não, definir fallback CSV publicado | ⬜ | 🔴 | A3.1 | 1h |
 | A3.3 | Testar escrita de um registro de teste no Notion | ⬜ | 🔴 | — | 30min |
 
