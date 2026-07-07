@@ -27,8 +27,8 @@
 | A1.3 | Popular com os contratos reais atualmente ativos | ✅ | 🔴 | A1.2 | 2h |
 
 **Checkpoint A1:**
-- [ ] Planilha existe no Drive com todos os contratos ativos de Luciano
-- [ ] Schema aprovado — nenhuma coluna essencial faltando
+- [x] Planilha existe no Drive com todos os contratos ativos de Luciano
+- [x] Schema aprovado — nenhuma coluna essencial faltando
 
 ---
 
