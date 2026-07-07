@@ -1,7 +1,7 @@
 # ADR-COB-001: Sistema de cobrança mensal de locação assistido por IA
 
 ## Status
-Proposto
+Aceito
 
 ## Contexto
 
