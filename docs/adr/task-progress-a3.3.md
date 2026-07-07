@@ -19,10 +19,10 @@
 
 | Campo | Valor |
 |-------|-------|
-| Estado atual | 🔄 Em andamento |
+| Estado atual | ✅ Concluído |
 | Data início | 2026-07-07 |
-| Data término | — |
-| Duração | — |
+| Data término | 2026-07-07 |
+| Duração | ~5min |
 | Tentativas | 1 |
 
 ### Transições de Estado
@@ -30,6 +30,7 @@
 | Data | De | Para | Motivo |
 |------|----|------|--------|
 | 2026-07-07 | ⬜ Pendente | 🔄 Em andamento | Início da implementação |
+| 2026-07-07 | 🔄 Em andamento | ✅ Concluído | Aba Historico criada e validada |
 
 ---
 
@@ -59,7 +60,9 @@ Testar se é possível escrever um registro de teste na aba "Historico" da plani
 
 | # | Validação | Resultado | Tentativa | Timestamp | Observações |
 |---|-----------|-----------|-----------|-----------|-------------|
-| — | Nenhuma validação ainda | — | — | — | — |
+| 1 | Aba "Historico" existe na planilha | ✅ Passou | 1 | 2026-07-07 | Aba criada com 19 colunas |
+| 2 | Escrita de registro teste funcionou | ✅ Passou | 1 | 2026-07-07 | HIST-202607-001 registrado |
+| 3 | Colunas corretas | ✅ Passou | 1 | 2026-07-07 | 19 colunas validadas |
 
 ---
 
@@ -130,9 +133,9 @@ Testar se é possível escrever um registro de teste na aba "Historico" da plani
 
 | # | Critério | Atendido | Evidência |
 |---|----------|----------|-----------|
-| 1 | Aba "Historico" existe na planilha | ⬜ | Confirmação do usuário |
-| 2 | Escrita de registro teste funcionou | ⬜ | Print ou confirmação |
-| 3 | Colunas corretas | ⬜ | Verificação na aba |
+| 1 | Aba "Historico" existe na planilha | ✅ | Aba criada com 19 colunas |
+| 2 | Escrita de registro teste funcionou | ✅ | HIST-202607-001 confirmado |
+| 3 | Colunas corretas | ✅ | Schema validado via export CSV |
 
 ---
 
@@ -148,7 +151,7 @@ Testar se é possível escrever um registro de teste na aba "Historico" da plani
 
 | Campo | Valor |
 |-------|-------|
-| Tarefa concluída | ❌ Não (aguardando usuário) |
-| Validações passaram | 0/3 |
-| Documentação atualizada | ✅ Sim (schema criado) |
+| Tarefa concluída | ✅ Sim |
+| Validações passaram | 3/3 |
+| Documentação atualizada | ✅ Sim |
 | Próxima tarefa | Checkpoint A3 |

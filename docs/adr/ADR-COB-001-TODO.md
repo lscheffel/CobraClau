@@ -52,17 +52,17 @@
 |---|--------|--------|------------|--------------|------------|
 | A3.1 | Testar leitura da planilha via conector Google Drive no Claude | ✅ | 🔴 | A1.2 | 30min |
 | A3.2 | Confirmar se o conector lê Google Sheets nativamente; se não, definir fallback CSV publicado | ✅ | 🔴 | A3.1 | 1h |
-| A3.3 | Testar escrita na aba Historico do Google Sheets | 🔄 | 🔴 | — | 30min |
+| A3.3 | Testar escrita na aba Historico do Google Sheets | ✅ | 🔴 | — | 30min |
 
 **Checkpoint A3:**
 - [x] Leitura real da planilha confirmada a partir do chat
-- [ ] Escrita real na aba Historico confirmada a partir do chat
+- [x] Escrita real na aba Historico confirmada a partir do chat
 
 ---
 
 **Checkpoint Geral Fase A:**
-- [ ] Fichas e regras carregadas com dados reais
-- [ ] Conector Drive validado ponta a ponta (leitura e escrita)
+- [x] Fichas e regras carregadas com dados reais
+- [x] Conector Drive validado ponta a ponta (leitura e escrita)
 
 ---
 
@@ -134,7 +134,7 @@
 
 | Fase | Tarefas | Horas Est. | Status |
 |------|---------|------------|--------|
-| Fase A: Fundação de dados | 9 | ~8h | ⬜ |
+| Fase A: Fundação de dados | 9 | ~8h | ✅ |
 | Fase B: Motor e templates | 13 | ~11h | ⬜ |
 | Fase C: Piloto e ajuste | 3 | ~4h | ⬜ |
 | **Total** | **25** | **~23h** | |
