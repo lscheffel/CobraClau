@@ -19,10 +19,10 @@
 
 | Campo | Valor |
 |-------|-------|
-| Estado atual | 🔄 Em andamento |
+| Estado atual | ✅ Concluído |
 | Data início | 2026-07-07 |
-| Data término | — |
-| Duração | — |
+| Data término | 2026-07-07 |
+| Duração | ~5min |
 | Tentativas | 1 |
 
 ### Transições de Estado
@@ -30,6 +30,7 @@
 | Data | De | Para | Motivo |
 |------|----|------|--------|
 | 2026-07-07 | ⬜ Pendente | 🔄 Em andamento | Início da implementação |
+| 2026-07-07 | 🔄 Em andamento | ✅ Concluído | Planilha criada pelo usuário |
 
 ---
 
@@ -62,7 +63,9 @@ Criar a planilha "Fichas-Locacao" no Google Drive do Luciano com o schema defini
 
 | # | Validação | Resultado | Tentativa | Timestamp | Observações |
 |---|-----------|-----------|-----------|-----------|-------------|
-| — | Nenhuma validação ainda | — | — | — | — |
+| 1 | Planilha "Fichas-Locacao" criada no Drive | ✅ Passou | 1 | 2026-07-07 | Link: https://docs.google.com/spreadsheets/d/1r1-EzmIl1LVgLi0NMq2uxOAjBenWcX--2C5TbhLEeK4/ |
+| 2 | Aba "Contratos" existe com schema correto | ✅ Passou | 1 | 2026-07-07 | Aba criada com cabeçalhos |
+| 3 | Aba "Regras-Rubrica" criada (vazia) | ✅ Passou | 1 | 2026-07-07 | Aba criada |
 
 ---
 
@@ -107,9 +110,9 @@ Criar a planilha "Fichas-Locacao" no Google Drive do Luciano com o schema defini
 
 | # | Critério | Atendido | Evidência |
 |---|----------|----------|-----------|
-| 1 | Planilha "Fichas-Locacao" criada no Drive | ⬜ | Link da planilha |
-| 2 | Aba "Contratos" existe com schema correto | ⬜ | Screenshoot ou confirmação |
-| 3 | Aba "Regras-Rubrica" criada (vazia) | ⬜ | Confirmação |
+| 1 | Planilha "Fichas-Locacao" criada no Drive | ✅ | https://docs.google.com/spreadsheets/d/1r1-EzmIl1LVgLi0NMq2uxOAjBenWcX--2C5TbhLEeK4/ |
+| 2 | Aba "Contratos" existe com schema correto | ✅ | Aba criada com cabeçalhos |
+| 3 | Aba "Regras-Rubrica" criada (vazia) | ✅ | Aba criada |
 
 ---
 
@@ -125,7 +128,7 @@ Criar a planilha "Fichas-Locacao" no Google Drive do Luciano com o schema defini
 
 | Campo | Valor |
 |-------|-------|
-| Tarefa concluída | ❌ Não (aguardando usuário) |
-| Validações passaram | 0/3 |
-| Documentação atualizada | ✅ Sim (instruções criadas) |
+| Tarefa concluída | ✅ Sim |
+| Validações passaram | 3/3 |
+| Documentação atualizada | ✅ Sim |
 | Próxima tarefa | A1.3 (Popular com contratos reais) |
