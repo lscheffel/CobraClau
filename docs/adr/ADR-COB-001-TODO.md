@@ -52,17 +52,17 @@
 |---|--------|--------|------------|--------------|------------|
 | A3.1 | Testar leitura da planilha via conector Google Drive no Claude | ✅ | 🔴 | A1.2 | 30min |
 | A3.2 | Confirmar se o conector lê Google Sheets nativamente; se não, definir fallback CSV publicado | ✅ | 🔴 | A3.1 | 1h |
-| A3.3 | Testar escrita de um registro de teste no Notion | 🔄 | 🔴 | — | 30min |
+| A3.3 | Testar escrita na aba Historico do Google Sheets | 🔄 | 🔴 | — | 30min |
 
 **Checkpoint A3:**
-- [ ] Leitura real da planilha confirmada a partir do chat
-- [ ] Escrita real no Notion confirmada a partir do chat
+- [x] Leitura real da planilha confirmada a partir do chat
+- [ ] Escrita real na aba Historico confirmada a partir do chat
 
 ---
 
 **Checkpoint Geral Fase A:**
 - [ ] Fichas e regras carregadas com dados reais
-- [ ] Os dois conectores (Drive e Notion) validados ponta a ponta
+- [ ] Conector Drive validado ponta a ponta (leitura e escrita)
 
 ---
 
@@ -92,14 +92,14 @@
 | B2.3 | Validar os dois templates com um exemplo real preenchido manualmente | ⬜ | 🔴 | B2.1, B2.2 | 1h |
 | B2.4 | Ajustar redação conforme feedback de Luciano | ⬜ | 🟡 | B2.3 | 1h |
 | B2.5 | Subir templates ao Project Knowledge | ⬜ | 🔴 | B2.4 | 30min |
-| B2.6 | Definir schema da memória de cálculo no Notion (propriedades da database) | ⬜ | 🔴 | — | 1h |
-| B2.7 | Criar a database no Notion | ⬜ | 🔴 | B2.6 | 30min |
+| B2.6 | Definir schema da memória de cálculo na aba Historico do Google Sheets | ⬜ | 🔴 | — | 1h |
+| B2.7 | Criar a aba Historico na planilha Fichas-Locacao | ⬜ | 🔴 | B2.6 | 30min |
 | B2.8 | Testar escrita ponta a ponta do motor com um contrato de teste | ⬜ | 🔴 | B1.4, B2.5, B2.7 | 2h |
-| B2.9 | Revisar o registro gravado no Notion contra o card gerado | ⬜ | 🔴 | B2.8 | 30min |
+| B2.9 | Revisar o registro gravado no Google Sheets contra o card gerado | ⬜ | 🔴 | B2.8 | 30min |
 
 **Checkpoint B2:**
 - [ ] Motor gera 1 card de teste completo a partir de um boleto fake
-- [ ] Registro correspondente aparece corretamente na memória do Notion
+- [ ] Registro correspondente aparece corretamente na aba Historico do Google Sheets
 - [ ] Templates aprovados por Luciano
 
 ---
