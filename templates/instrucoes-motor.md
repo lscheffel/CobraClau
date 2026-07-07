@@ -70,7 +70,9 @@ def calcular_locador(rubricas, regras):
 - Incluir pendências em observações
 
 ### 6. Gravação em Memória
-- Registrar no Notion: mês, contrato, rubricas classificadas, valores, pendências
+- Gravar registro na aba Historico do Google Sheets
+- Schema: `docs/architecture/schema-historico.md`
+- Um registro por contrato por mês
 
 ## Regras de Pendência
 
