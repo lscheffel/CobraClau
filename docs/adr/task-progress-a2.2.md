@@ -19,10 +19,10 @@
 
 | Campo | Valor |
 |-------|-------|
-| Estado atual | 🔄 Em andamento |
+| Estado atual | ✅ Concluído |
 | Data início | 2026-07-07 |
-| Data término | — |
-| Duração | — |
+| Data término | 2026-07-07 |
+| Duração | ~10min |
 | Tentativas | 1 |
 
 ### Transições de Estado
@@ -30,6 +30,7 @@
 | Data | De | Para | Motivo |
 |------|----|------|--------|
 | 2026-07-07 | ⬜ Pendente | 🔄 Em andamento | Início da implementação |
+| 2026-07-07 | 🔄 Em andamento | ✅ Concluído | Aba Regras-Rubrica preenchida |
 
 ---
 
@@ -59,7 +60,9 @@ Preencher a aba "Regras-Rubrica" da planilha "Fichas-Locacao" com as rubricas do
 
 | # | Validação | Resultado | Tentativa | Timestamp | Observações |
 |---|-----------|-----------|-----------|-----------|-------------|
-| — | Nenhuma validação ainda | — | — | — | — |
+| 1 | Aba "Regras-Rubrica" preenchida | ✅ Passou | 1 | 2026-07-07 | 20 rubricas documentadas |
+| 2 | Pelo menos 15 rubricas documentadas | ✅ Passou | 1 | 2026-07-07 | 20 rubricas confirmadas |
+| 3 | Colunas classe e base_legal preenchidas | ✅ Passou | 1 | 2026-07-07 | Todas as colunas válidas |
 
 ---
 
@@ -128,9 +131,9 @@ Preencher a aba "Regras-Rubrica" da planilha "Fichas-Locacao" com as rubricas do
 
 | # | Critério | Atendido | Evidência |
 |---|----------|----------|-----------|
-| 1 | Aba "Regras-Rubrica" preenchida | ⬜ | Confirmação do usuário |
-| 2 | Pelo menos 15 rubricas documentadas | ⬜ | Validação na planilha |
-| 3 | Colunas classe e base_legal preenchidas | ⬜ | Verificação |
+| 1 | Aba "Regras-Rubrica" preenchida | ✅ | 20 rubricas confirmadas via export CSV |
+| 2 | Pelo menos 15 rubricas documentadas | ✅ | 20 rubricas documentadas |
+| 3 | Colunas classe e base_legal preenchidas | ✅ | Todas as colunas válidas |
 
 ---
 
@@ -146,7 +149,7 @@ Preencher a aba "Regras-Rubrica" da planilha "Fichas-Locacao" com as rubricas do
 
 | Campo | Valor |
 |-------|-------|
-| Tarefa concluída | ❌ Não (aguardando usuário) |
-| Validações passaram | 0/3 |
-| Documentação atualizada | ✅ Sim (instruções criadas) |
+| Tarefa concluída | ✅ Sim |
+| Validações passaram | 3/3 |
+| Documentação atualizada | ✅ Sim |
 | Próxima tarefa | A2.3 (Validar tabela contra Lei 8.245/91) |
