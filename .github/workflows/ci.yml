@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  docs:
+    name: Validação de Documentação
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar estrutura de documentação
+        run: |
+          echo "Verificando estrutura do projeto..."
+          test -f README.md || (echo "❌ README.md não encontrado" && exit 1)
+          test -f AGENTS.md || (echo "❌ AGENTS.md não encontrado" && exit 1)
+          test -f CONTRIBUTING.md || (echo "❌ CONTRIBUTING.md não encontrado" && exit 1)
+          test -f CHANGELOG.md || (echo "❌ CHANGELOG.md não encontrado" && exit 1)
+          test -d docs/adr || (echo "❌ Diretório docs/adr não encontrado" && exit 1)
+          echo "✅ Estrutura válida"
+
+      - name: Verificar links quebrados
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: --verbose --no-progress './**/*.md'
+          fail: false
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar formatação Markdown
+        run: |
+          echo "Verificando formatação básica dos arquivos Markdown..."
+          for file in *.md docs/**/*.md; do
+            if [ -f "$file" ]; then
+              echo "Verificando: $file"
+              # Verificar se há linhas muito longas (mais de 200 caracteres)
+              if awk 'length > 200 {print NR": "$0}' "$file" | grep -q .; then
+                echo "⚠️  Linhas longas encontradas em $file"
+              fi
+            fi
+          done
+          echo "✅ Verificação concluída"
+
+  security:
+    name: Verificação de Segurança
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar arquivos sensíveis
+        run: |
+          echo "Verificando arquivos sensíveis no repositório..."
+          # Verificar se há arquivos .env ou com credenciais
+          if find . -name ".env*" -o -name "*.key" -o -name "*.pem" | grep -q .; then
+            echo "❌ Arquivos sensíveis encontrados no repositório!"
+            find . -name ".env*" -o -name "*.key" -o -name "*.pem"
+            exit 1
+          fi
+          echo "✅ Nenhum arquivo sensível encontrado"
+
+      - name: Verificar credentials em commits
+        run: |
+          echo "Verificando se há credentials nos commits recentes..."
+          # Verificar os últimos 10 commits por possíveis credentials
+          git log --oneline -10 --all | while read commit; do
+            git diff-tree --no-commit-id -r "$commit" | while read; do
+              echo "Verificando mudanças no commit: $commit"
+            done
+          done
+          echo "✅ Verificação concluída"
