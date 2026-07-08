@@ -1,0 +1,55 @@
+name: CI — Pre-Merge Gate
+
+# Implementa o fluxo ci-pre-merge-gate.md (ADR-0142.1)
+# Orquestra: Validation Gates + Doc Reconciliation + Security + Code Review Approval
+# Fail policy: fail-closed (qualquer gate vermelho ou falta de aprovação => merge bloqueado).
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  pull-requests: read
+  contents: read
+
+jobs:
+  validation-gates:
+    name: "Require · Validation Gates"
+    uses: ./.github/workflows/ci-validation-gates.yml
+
+  doc-reconciliation:
+    name: "Require · Doc Reconciliation"
+    uses: ./.github/workflows/ci-doc-reconciliation.yml
+
+  security-scan:
+    name: "Require · Security"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar arquivos sensíveis
+        run: |
+          set -euo pipefail
+          if find . -name ".env*" -o -name "*.key" -o -name "*.pem" | grep -q .; then
+            echo "❌ Arquivos sensíveis encontrados no repositório!"
+            find . -name ".env*" -o -name "*.key" -o -name "*.pem"
+            exit 1
+          fi
+          echo "✅ Sem arquivos sensíveis"
+
+  review-gate:
+    name: "Require · Code Review Approval"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exigir aprovação de code review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          approved=$(gh pr view "$PR" --json reviews --jq '[.reviews[] | select(.state=="APPROVED")] | length')
+          if [ "${approved:-0}" -lt 1 ]; then
+            echo "❌ PR sem aprovação de code review (fail-closed)"
+            exit 1
+          fi
+          echo "✅ Code review aprovado (${approved} aprovação(ões))"

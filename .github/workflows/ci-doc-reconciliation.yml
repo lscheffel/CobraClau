@@ -1,0 +1,80 @@
+name: CI — Doc Reconciliation
+
+# Implementa o fluxo ci-doc-reconciliation.md (ADR-0142.1)
+# Reconcilia DSG Vol 7 <-> utilitários (ci-workflows) <-> INDEX.md
+# Fail policy: fail-closed para drift crítico (utilitário ausente no INDEX / órfão).
+# Sem dependências externas: frontmatter parseado via regex.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_call:
+
+jobs:
+  reconcile:
+    name: "Doc Reconciliation (DSG ↔ Utilitários ↔ INDEX)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Reconciliar DSG Vol 7 / utilitários / INDEX
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys, os, re, glob
+
+          WF_DIR = "docs/kilosettings/ci-workflows"
+          DSG_V7 = "docs/dsg/volume-7/workflow-cookbook.md"
+          INDEX = os.path.join(WF_DIR, "INDEX.md")
+
+          def fm_keys(txt):
+              m = re.match(r"^---\n(.*?)\n---\n", txt, re.S)
+              if not m: return None
+              return {ln.split(":",1)[0].strip() for ln in m.group(1).splitlines() if ":" in ln}
+          def fm_get(txt, key):
+              m = re.match(r"^---\n(.*?)\n---\n", txt, re.S)
+              if not m: return None
+              for ln in m.group(1).splitlines():
+                  if ln.startswith(key+":") or ln.startswith(key+" "):
+                      return ln.split(":",1)[1].strip()
+              return None
+
+          utils = [os.path.basename(f) for f in glob.glob(os.path.join(WF_DIR, "*.md"))
+                   if os.path.basename(f) != "INDEX.md"]
+          ok = True
+
+          ids = set()
+          for f in sorted(glob.glob(os.path.join(WF_DIR, "*.md"))):
+              if os.path.basename(f) == "INDEX.md": continue
+              txt = open(f, encoding="utf-8").read()
+              if fm_keys(txt) is None:
+                  print("❌ Sem frontmatter:", f); ok = False; continue
+              fid = fm_get(txt, "id") or ""
+              fname = os.path.splitext(os.path.basename(f))[0]
+              if fid != fname:
+                  print(f"❌ id '{fid}' != filename '{fname}' em {f}"); ok = False
+              ids.add(fid)
+
+          v7 = open(DSG_V7, encoding="utf-8").read()
+          for fid in sorted(ids):
+              if fid not in v7 and f"ci-workflows/{fid}.md" not in v7:
+                  print(f"⚠️ Utilitário '{fid}' não citado em DSG Vol 7")
+
+          idx = open(INDEX, encoding="utf-8").read()
+          for f in utils:
+              if f not in idx:
+                  print(f"❌ '{f}' ausente no INDEX.md (drift crítico)"); ok = False
+          for m in re.findall(r"\(\./([\w-]+\.md)\)", idx):
+              if not os.path.exists(os.path.join(WF_DIR, m)):
+                  print(f"❌ INDEX cita '{m}' inexistente"); ok = False
+
+          if ok:
+              print(f"✅ Reconciliação OK: {len(utils)} utilitários; DSG e INDEX consistentes")
+          sys.exit(0 if ok else 1)
+          PY

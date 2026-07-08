@@ -1,0 +1,168 @@
+name: CI — Validation Gates
+
+# Implementa o fluxo ci-validation-gates.md (ADR-0142.1)
+# 6 gates obrigatórios: Build · Lint · Typecheck · Tests · Architectural · Documentation
+# Fail policy: fail-closed (qualquer gate vermelho => PR não mergeia).
+# Sem dependências externas: frontmatter é parseado via regex (key:value plano).
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+jobs:
+  gate-build:
+    name: "Gate 1 · Build (Structure)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar estrutura obrigatória
+        run: |
+          set -euo pipefail
+          for p in README.md AGENTS.md docs/adr docs/dsg docs/kilosettings/ci-workflows; do
+            test -e "$p" || { echo "❌ Ausente: $p"; exit 1; }
+          done
+          echo "✅ Estrutura OK"
+
+  gate-lint:
+    name: "Gate 2 · Lint (Markdown)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar formatação Markdown
+        run: |
+          set -euo pipefail
+          fail=0
+          while IFS= read -r f; do
+            if grep -qE '.{201,}' "$f"; then echo "❌ Linha >200 em: $f"; awk 'length>200{print "   linha "NR}' "$f"; fail=1; fi
+            if grep -qE ' +$' "$f"; then echo "❌ Trailing whitespace em: $f"; fail=1; fi
+          done < <(find . -name '*.md' -not -path './node_modules/*')
+          if [ "$fail" -ne 0 ]; then echo "❌ Lint falhou"; exit 1; fi
+          echo "✅ Lint OK"
+
+  gate-typecheck:
+    name: "Gate 3 · Typecheck (Frontmatter)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validar frontmatter dos utilitários
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys, glob, re
+          req = {"id","title","type","version","status","trigger","participants","related_skills","related_bp","source"}
+          def fm_keys(txt):
+              m = re.match(r"^---\n(.*?)\n---\n", txt, re.S)
+              if not m: return None
+              return {ln.split(":",1)[0].strip() for ln in m.group(1).splitlines() if ":" in ln}
+          def fm_get(txt, key):
+              m = re.match(r"^---\n(.*?)\n---\n", txt, re.S)
+              if not m: return None
+              for ln in m.group(1).splitlines():
+                  if ln.startswith(key+":") or ln.startswith(key+" "):
+                      return ln.split(":",1)[1].strip()
+              return None
+          ok = True
+          for f in sorted(glob.glob("docs/kilosettings/ci-workflows/*.md")):
+              if f.endswith("INDEX.md"): continue
+              txt = open(f, encoding="utf-8").read()
+              keys = fm_keys(txt)
+              if keys is None:
+                  print("❌ Sem frontmatter:", f); ok = False; continue
+              missing = req - keys
+              if missing:
+                  print("❌ Campos faltando em", f, ":", sorted(missing)); ok = False; continue
+              if fm_get(txt, "type") not in ("workflow", "ci-flow"):
+                  print("❌ type inválido em", f, ":", fm_get(txt, "type")); ok = False; continue
+              print("✅", f)
+          sys.exit(0 if ok else 1)
+          PY
+
+  gate-tests:
+    name: "Gate 4 · Tests (Internal Links)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verificar links internos .md
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys, os, re, glob
+          link_re = re.compile(r'\]\(([^)]+)\)')
+          ok = True
+          for f in glob.glob("**/*.md", recursive=True):
+              base = os.path.dirname(f)
+              for m in link_re.findall(open(f, encoding="utf-8").read()):
+                  if m.startswith(("http://", "https://", "mailto:", "#")):
+                      continue
+                  target = m.split("#")[0]
+                  if not target:
+                      continue
+                  path = os.path.normpath(os.path.join(base, target))
+                  if not os.path.exists(path):
+                      print(f"❌ Link quebrado em {f}: {m}")
+                      ok = False
+          sys.exit(0 if ok else 1)
+          PY
+
+  gate-architectural:
+    name: "Gate 5 · Architectural (ADR refs)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verificar referências a ADRs
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys, os, re, glob
+          ok = True
+          for f in glob.glob("**/*.md", recursive=True):
+              for m in re.findall(r'docs/adr/[A-Za-z0-9._/-]+\.md', open(f, encoding="utf-8").read()):
+                  if not os.path.exists(m):
+                      print(f"❌ ADR ref quebrada em {f}: {m}")
+                      ok = False
+          sys.exit(0 if ok else 1)
+          PY
+
+  gate-documentation:
+    name: "Gate 6 · Documentation (Source links)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verificar frontmatter source -> DSG
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys, glob, re, os
+          def fm_get(txt, key):
+              m = re.match(r"^---\n(.*?)\n---\n", txt, re.S)
+              if not m: return None
+              for ln in m.group(1).splitlines():
+                  if ln.startswith(key+":") or ln.startswith(key+" "):
+                      return ln.split(":",1)[1].strip()
+              return None
+          ok = True
+          for f in sorted(glob.glob("docs/kilosettings/ci-workflows/*.md")):
+              if f.endswith("INDEX.md"): continue
+              txt = open(f, encoding="utf-8").read()
+              src = fm_get(txt, "source") or ""
+              path = src.split("#")[0]
+              if path and not os.path.exists(path):
+                  print(f"❌ source quebrado em {f}: {src}")
+                  ok = False
+          sys.exit(0 if ok else 1)
+          PY
