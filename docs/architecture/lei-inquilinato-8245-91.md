@@ -18,15 +18,15 @@ VI - não poder o locador se recusar a fornecer, por escrito, ao locatário, o c
 
 VII - pagar as despesas extraordinárias de condomínio;
 
-VIII - payer as despesas extraordinárias de conservação do imóvel;
+VIII - pagar as despesas extraordinárias de conservação do imóvel;
 
-IX - payer as despesas de conservação do imóvel que não sejam de responsabilidade do locatário;
+IX - pagar as despesas de conservação do imóvel que não sejam de responsabilidade do locatário;
 
-X - payer as despesas de conservação do imóvel que sejam de responsabilidade do locatário, quando este não for encontrado ou se recusar a efetuar o pagamento;
+X - pagar as despesas de conservação do imóvel que sejam de responsabilidade do locatário, quando este não for encontrado ou se recusar a efetuar o pagamento;
 
-XI - payer as despesas de conservação do imóvel que sejam de responsabilidade do locatário, quando este não for encontrado ou se recusar a efetuar o pagamento;
+XI - pagar as despesas de conservação do imóvel que sejam de responsabilidade do locatário, quando este não for encontrado ou se recusar a efetuar o pagamento;
 
-XII - payer as despesas de conservação do imóvel que sejam de responsabilidade do locatário, quando este não for encontrado ou se recusar a efetuar o pagamento;
+XII - pagar as despesas de conservação do imóvel que sejam de responsabilidade do locatário, quando este não for encontrado ou se recusar a efetuar o pagamento;
 
 **Resumo para classificação:**
 - **Locador é responsável por:** despesas extraordinárias, estruturais, conservação do imóvel

@@ -40,3 +40,6 @@ tmp/
 temp/
 *.tmp
 *.temp
+
+# MCP config e tokens
+docs/mcp/

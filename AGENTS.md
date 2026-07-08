@@ -34,6 +34,37 @@ CobraClau/
 7. **Memória:** Grava registro no Notion
 8. **Entrega:** Retorna cards + pendências (se houver)
 
+## Integração com MCP (Google Workspace)
+
+### Disponibilidade
+
+O MCP `google-workspace` está configurado no `~/.config/kilo/kilo.json` com credenciais OAuth do usuário `lscheffel@gmail.com`. Ele expõe ferramentas para Google Drive, Docs, Sheets, Gmail, Calendar, etc.
+
+### Como agents consomem o MCP
+
+**Kilo (sessão principal):** Tem acesso direto às ferramentas MCP. Quando o contexto envolve Google Drive, Kilo usa automaticamente as ferramentas `search_drive_files`, `get_drive_file_content`, `read_sheet_values`, etc.
+
+**Subagentes (`task` tool):** Não herdam MCPs automaticamente. Para usar dados do Google Drive, o fluxo correto é:
+
+1. **Kilo extrai** os dados necessários via MCP (ex: lê planilha de fichas)
+2. **Kilo delega** ao subagente com os dados já em contexto
+3. **Subagente processa** (classificação, cálculo, geração de cards)
+
+### Ferramentas MCP relevantes para CobraClau
+
+| Ferramenta | Uso no projeto |
+|---|---|
+| `search_drive_files` | Buscar fichas, boletos, planilhas no Drive |
+| `get_drive_file_content` | Ler conteúdo de arquivos (PDFs, Docs, planilhas) |
+| `read_sheet_values` | Ler dados de planilhas Google Sheets |
+| `modify_sheet_values` | Atualizar valores em planilhas |
+| `create_spreadsheet` | Criar novas planilhas de controle |
+| `create_drive_folder` | Organizar pastas de cobrança |
+
+### Regra de uso
+
+> **Sempre que o trabalho envolver dados do Google Drive, Kilo deve acessar via MCP primeiro e repassar os dados já extraídos aos subagentes.** Nunca assumir que subagentes têm acesso direto ao Drive.
+
 ## Regras de Classificação
 
 ### Decision Tree
